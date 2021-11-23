@@ -22,6 +22,4 @@ def build_neural_network(x_train, y_train):
     # Fit model with train data
     model.fit(x_train, y_train, epochs=20, batch_size=32)
 
-    model.save("testmodel")
-
     return model

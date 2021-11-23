@@ -1,12 +1,14 @@
 import numpy as np
+import pandas as pd
 
 columns_to_boolean = ['Saving_Amount', 'Current_Amount', 'Time_Deposits_Amount', 'Funds_Amount',
                             'Stocks_Amount', 'Bank_Assurance_Amount', 'Life_Assurance_Amount', 'Business_Loan_Amount', 
                             'Home_Loan_Amount', 'Consumer_Loan_Amount', 'Branch_Transactions', 'ATM_Transactions',
                             'Phone_Transactions', 'Internet_Transactions', 'Standing_Orders']
 
-def modifyData(df):
+columns = ["Age", "Year_Of_Account_Creation"]
 
+def modifyData(df):
     for column in columns_to_boolean:
         df.loc[df[column] > 0, column] = 1
         # df[column] = df[column].astype('bool')
@@ -14,21 +16,27 @@ def modifyData(df):
 
     df['Gender'] = df['Gender'].map({'F': 1, 'M': 0})
     df['Year_Of_Account_Creation'] = df["Age"] - df["Tenure"] // 12
-
     df['Number_Of_Used_Services'] = df[[f"{column}_Flag" for column in columns_to_boolean if f"{column}_Flag".endswith("Amount_Flag") == True]].sum(axis=1)
 
-    return df
-
-def addAgeCategory(df):
-    intervals = [(0, 22),(22, 27), (27, 33), (33, 43), (43, 56)]
-
-    for name in ["Age", "Year_Of_Account_Creation"]:
-        for interval in intervals:
-            min, max = interval[0], interval[1]
-            df[f"{name} - {min}-{max}"] = np.where((df[name] <= max) & (df[name] > min), 1, 0)
-
+    for name in columns:
         conditions = [df[name] <= 18, df[name] <= 27, df[name] <= 33, df[name] <= 43, df[name] <= 56]
         choices = ["18-22","22-27","27-33","33-43","43-56"]
         df[f"{name}_Category"] = np.select(conditions, choices, default="65+")
-        
+
     return df
+
+def changeToDummies(df):  
+    df = pd.get_dummies(df, columns=[f"{name}_Category" for name in columns])
+
+    return df
+
+def printUniqueValues(df):
+    print("Unique values")
+    
+    for column in df:
+        unique_values = np.unique(df[column])
+        nr_value = len(unique_values)
+        if nr_value <10:
+            print(f"The number of values for feature {column}: {nr_value} -- {unique_values}")
+        else:
+            print(f"The number of values for feature {column}: {nr_value}")
