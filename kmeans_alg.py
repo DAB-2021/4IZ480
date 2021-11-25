@@ -27,7 +27,9 @@ def kmeans_build(kmeans_data, number_of_components=None, number_of_clusters=3):
     counts = counts.reshape(1,3)
 
     countscldf = pd.DataFrame(counts, columns = cluster_names)
-    print(countscldf)  
+    print(countscldf) 
+    
+    return predictions
 
 def cluster_optimization(kmeans_data, number_of_components=None):
     print("Initializing check for optimal number of clusters")
@@ -47,7 +49,7 @@ def cluster_optimization(kmeans_data, number_of_components=None):
             difference = inertia[-2]-models_inertia
             print(f"Difference in inertia between clusters: {difference}")
             inertia_difference[number] = difference
-        print("The innertia for :", number, "Clusters is:", models_inertia)
+        print("The inertia for :", number, "Clusters is:", models_inertia)
 
     fig, (ax1) = plt.subplots(1, figsize=(16,6))
     xx = np.arange(len(number_of_clusters))
