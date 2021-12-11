@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Ignore manual
-Banking Prediction Sample 1 - Dataset.csv
+*.csv
 random_forest_first_tree.png
 random_forest_first_tree.txt
 KMeans.png
